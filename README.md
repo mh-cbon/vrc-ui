@@ -1,6 +1,6 @@
 # vrc-ui
 
-Vlc Remote control UI.
+Vlc Remote Control UI.
 
 Work in progress.
 
