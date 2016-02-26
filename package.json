@@ -1,0 +1,34 @@
+{
+  "name": "@mh-cbon/vrc-ui",
+  "version": "1.0.0",
+  "description": "Vlc Remote Controls UI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack -w",
+    "http": "http-server",
+    "start": "electron electron.js"
+  },
+  "keywords": [
+    "vlc"
+  ],
+  "author": "mh-cbon <mh-cbon@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-preset-es2015": "^6.5.0",
+    "tag-loader": "^0.3.0",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "@mh-cbon/vlc-api": "github:mh-cbon/node-vlc-api",
+    "async": "^1.5.2",
+    "hyperquest": "^1.2.0",
+    "jshashes": "^1.0.5",
+    "numeral": "^1.5.3",
+    "riot": "^2.3.15"
+  }
+}
