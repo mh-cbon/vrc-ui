@@ -31,3 +31,4 @@ You may need to start a vlc instance on your local
 - https://github.com/mh-cbon/node-vlc-api
 - http://riotjs.com
 - http://webpack.github.io/docs/
+- https://github.com/videolan/vlc/blob/master/share/lua/http/requests/README.txt
