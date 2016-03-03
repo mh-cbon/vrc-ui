@@ -17,15 +17,10 @@ No installation method is provided as you should use a packaged app such `vrc-el
 Pre requesites
 - `npm install http-server -g`
 - `npm install webpack -g`
+- `npm install pico-proxy -g` __you ll need a special version please hang on, it s not ready yet__
 - `git clone git@github.com:mh-cbon/vrc-ui.git`
 - `cd vrc-ui && npm i`
-
-Then,
-- `npm run watch`
-- `npm run http`
-
-You may need to start a vlc instance on your local
-- `vlc -I http --http-password 123`
+- `npm run dev`
 
 # Read more
 - https://github.com/mh-cbon/node-vlc-api

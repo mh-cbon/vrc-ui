@@ -4,7 +4,7 @@ require('./tags/remote-control.tag');
 require('./tags/drop.tag');
 require('./tags/playlist.tag');
 
-var backend     = new (require('./vlc-remote.js'))({password: '123'});
+var backend     = new (require('./vlc-remote.js'))({port: 8083, password: '123'});
 var normalizer  = require('./drop-normalizer.js');
 
 document.addEventListener('DOMContentLoaded', function () {

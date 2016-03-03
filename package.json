@@ -6,9 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
+    "dev": "npm run vlc & npm run vlc-proxy & npm run watch & npm run http & wait",
+    "vlc": "vlc -I http --http-password 123",
+    "vlc-proxy": "pico-proxy --port 8083 --target http://127.0.0.1:8080/ --allow-origin http://127.0.0.1:8081 --allow-credentials",
     "watch": "webpack -w",
-    "http": "http-server",
-    "start": "electron electron.js"
+    "http": "http-server -o -p 8081"
   },
   "keywords": [
     "vlc"
