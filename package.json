@@ -9,7 +9,8 @@
     "dev": "npm run backend & npm run watch & npm run http & wait",
     "backend": "npm run vlc & npm run vlc-proxy",
     "vlc": "vlc -I http --http-password 123",
-    "vlc-proxy": "pico-proxy --port 8083 --target http://127.0.0.1:8080/ --allow-origin http://127.0.0.1:8081 --allow-credentials",
+    "vlc-proxy": "node ../pico-proxy-OK/bin/cli.js --port 8083 --target http://127.0.0.1:8080/ --allow-origin http://127.0.0.1:8081 --allow-credentials",
+    "vlc-proxy-ok": "pico-proxy --port 8083 --target http://127.0.0.1:8080/ --allow-origin http://127.0.0.1:8081 --allow-credentials",
     "watch": "webpack -w",
     "http": "http-server -o -p 8081"
   },
