@@ -6,9 +6,9 @@ Work in progress.
 
 # Technical
 
-It s an app using `riot.js`, `webpack`.
+It s an UI using `riot.js`, `webpack` for interface,
 
-It s using
+It relis on
 - the [vlc http interface](https://github.com/videolan/vlc/blob/master/share/lua/http/requests/README.txt)
 - with [pico-proxy](https://github.com/drowzy/pico-proxy) to fix VLC [CORS issues](https://trac.videolan.org/vlc/ticket/8848)
 - and [node-vlc-api](https://github.com/mh-cbon/node-vlc-api) to interface with vlc http interface
