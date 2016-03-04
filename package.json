@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "dev": "npm run vlc & npm run vlc-proxy & npm run watch & npm run http & wait",
+    "dev": "npm run backend & npm run watch & npm run http & wait",
+    "backend": "npm run vlc & npm run vlc-proxy",
     "vlc": "vlc -I http --http-password 123",
     "vlc-proxy": "pico-proxy --port 8083 --target http://127.0.0.1:8080/ --allow-origin http://127.0.0.1:8081 --allow-credentials",
     "watch": "webpack -w",
