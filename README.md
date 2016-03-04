@@ -12,7 +12,12 @@ It s using
 - the [vlc http interface](https://github.com/videolan/vlc/blob/master/share/lua/http/requests/README.txt)
 - with [pico-proxy](https://github.com/drowzy/pico-proxy) to fix VLC [CORS issues](https://trac.videolan.org/vlc/ticket/8848)
 - and [node-vlc-api](https://github.com/mh-cbon/node-vlc-api) to interface with vlc http interface
-to control a vlc remote instance via `node-vlc-api`.
+- an [http file store api](https://github.com/mh-cbon/http-file-store) to transfer files to play on vlc
+- a [bonjour](https://github.com/watson/bonjour) server via an [http interface](https://github.com/mh-cbon/bonjour-over-http) to announce
+and find the [vlc server](https://github.com/mh-cbon/bonjour-vlc)
+- an [http client interface of webtorrent](https://github.com/mh-cbon/webtorrent-http-api) to handle torrents
+
+to control a vlc remote instance and offer a cool drag and drop interface.
 
 # Install
 
