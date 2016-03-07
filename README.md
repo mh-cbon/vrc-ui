@@ -28,10 +28,11 @@ No installation method is provided as you should use a packaged app such `vrc-el
 Pre requesites
 - `npm install http-server -g`
 - `npm install webpack -g`
-- `npm install pico-proxy -g` __you ll need a special version please hang on, it s not ready yet__
+- `npm install mh-cbon/cors-proxy -g`
 - `npm install mh-cbn/bonjour-publish -g`
 - `npm install mh-cbn/http-file-store -g`
 - `npm install mh-cbn/bonjour-over-http -g`
+- `npm install mh-cbn/bonjour-publish -g`
 - `npm install mh-cbn/webtorrent-http-api -g`
 - `git clone git@github.com:mh-cbon/vrc-ui.git`
 - `cd vrc-ui && npm i`
