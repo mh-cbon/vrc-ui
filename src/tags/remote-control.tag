@@ -20,25 +20,25 @@
       name="volume" onwheel={volumeUpdate} onchange={volumeSet}>
   </div>
 
-  <style type='text/css'>
+  <style scoped>
     :scope div {
       border: black 1px solid;
     }
-    .loading {
+    :scope .loading {
       display: none;
     }
-    .shown {
+    :scope .shown {
       display: inline;
     }
-    .title{
+    :scope .title{
       margin: 0px;
       width: 100%;
     }
-    input[name="time"] {
+    :scope input[name="time"] {
       margin: 0px;
       width: 100%;
     }
-    input[name="volume"] {
+    :scope input[name="volume"] {
       margin: 0px;
       width: 4em;
       vertical-align: bottom;
@@ -50,6 +50,12 @@
     var tag = this;
 
     opts.loadingVideo = false;
+    opts.status = {
+      position: 0,
+      volume: 0,
+      hTime: '',
+      hLength: '',
+    };
 
     tag.on('mount', function(){
 
@@ -91,28 +97,54 @@
       })
     })
 
-    opts.vlc && opts.vlc.on('ctrl-play', function () {
+    play(e) {
       opts.loadingVideo = true
       tag.update()
-    })
 
-    play(e) {
-      opts.vlc && opts.vlc.trigger('ctrl-play')
+      var vlc = opts.vlc;
+      if (vlc.hasActiveMedia()) {
+        if (vlc.isPaused()) vlc.resume(function () {
+          console.log(arguments)
+        })
+        else if (vlc.isPlaying()) vlc.pause(function () {
+          console.log(arguments)
+        })
+        else vlc.play(vlc.getCurrentItem(), function () {
+          console.log(arguments)
+        })
+      }
+      else if(vlc.getPlaylist().length)
+        vlc.play(vlc.getPlaylist()[0].id, function () {
+          console.log(arguments)
+        })
+      else {
+        // trigger alert
+      }
     }
     volumeUpdate(e) {
       var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))) * 10;
       var el = e.target;
       e.target.value = parseInt(e.target.value) + delta;
-      opts.vlc && opts.vlc.trigger('ctrl-volume-rel', delta)
+      opts.vlc.volumeRel(delta)
     }
     volumeSet(e) {
-      opts.vlc && opts.vlc.trigger('ctrl-volume-abs', e.target.value)
+      opts.vlc.volumeAbs(e.target.value)
     }
     pause(e) {
-      (opts.status.state!=='paused') && opts.vlc && opts.vlc.trigger('ctrl-pause')
+      (opts.status.state!=='paused') &&
+        opts.vlc &&
+        opts.vlc.pause(function (err, res) {
+          console.log(err);
+          console.log(res)
+        })
     }
     stop(e) {
-      opts.vlc && opts.vlc.trigger('ctrl-stop')
+      opts.loadingVideo = false
+      tag.update()
+      opts.vlc.stop(function (err, res) {
+        console.log(err);
+        console.log(res)
+      })
     }
 
 

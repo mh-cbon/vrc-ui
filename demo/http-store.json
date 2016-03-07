@@ -1,0 +1,15 @@
+{
+  "base": "./demo/store/",
+  "url_base": "/",
+  "upload_path": "./demo/tmp",
+  "clear": {
+    "port": 8091,
+    "host": null
+  },
+  "cors": {
+    "credentials": true,
+    "origin": "*",
+    "credentials": "true",
+    "methods": ["GET", "POST"]
+  }
+}

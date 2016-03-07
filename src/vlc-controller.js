@@ -1,17 +1,25 @@
-var async = require('async')
+var async   = require('async')
 var numeral = require('numeral')
-var Hashes = require('jshashes')
+var Hashes  = require('jshashes')
+var riot    = require('riot')
 
 function VlcRemote (opts) {
 
   var self = this;
+  riot.observable(self);
 
-  var remote = require('@mh-cbon/vlc-api')(opts);
+  var remote;
   var currentPlaylist = [];
   var currentStatus   = {};
   var currentStatusHash   = null;
   var currentPlaylistHash = null;
   var currentItem = null;
+
+  // configuration
+  self.setEndPoint = function (opts) {
+    remote = require('@mh-cbon/vlc-api')(opts);
+  }
+  opts && self.setEndPoint(opts);
 
   // polling control
   var stopPull = false;
@@ -36,7 +44,7 @@ function VlcRemote (opts) {
   }
   this.start = function () {
     if (!stopPull) {
-      self.once('update', onUpdate)
+      self.one('update', onUpdate)
       refresh()
     }
     stopPull = false
@@ -60,7 +68,7 @@ function VlcRemote (opts) {
         })
       }
     ], function (err) {
-      self.emit('update', err);
+      self.trigger('update', err);
     })
   }
 
@@ -99,7 +107,7 @@ function VlcRemote (opts) {
       currentStatus.hLength = numeral(currentStatus.length).format('00:00:00');
       if (self.isPlaying()) accelerate()
       else decelerate()
-      self.emit('status');
+      self.trigger('status');
     }
   }
   function updatePlaylist (pl) {
@@ -115,7 +123,7 @@ function VlcRemote (opts) {
           }
           item.hDuration = numeral(item.duration).format('00:00:00');
         })
-        self.emit('playlist');
+        self.trigger('playlist');
       }
     }
   }
@@ -163,8 +171,5 @@ function VlcRemote (opts) {
     remote.status.stop(then)
   }
 }
-
-var EventEmitter = require('events').EventEmitter;
-require('util').inherits(VlcRemote, EventEmitter);
 
 module.exports = VlcRemote;

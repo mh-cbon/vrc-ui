@@ -15,11 +15,13 @@
   </div>
 
 
-  <style>
-    div[draggable] { border: 1px black solid; }
+  <style scoped>
+    :scope div[draggable] { border: 1px black solid; }
   </style>
 
   <script>
+    var tag = this;
+    var normalizer = require('../utils/drop-normalizer.js');
     //-
     dragStart(e) {
       console.log('drag start')
@@ -42,7 +44,13 @@
       e.target.style.opacity = '1';
       e.preventDefault();
       e.stopPropagation();
-      opts.dropper && opts.dropper.trigger('dropped', e.dataTransfer)
+      normalizer.normalize(dataTransfer).forEach(function (f) {
+        if (f.type==='file') {
+          tag.trigger('file-dropped', f)
+        } else if (f.type.match(/uri-list/)) {
+          tag.trigger('url-dropped', f)
+        }
+      })
     }
   </script>
 

@@ -8,15 +8,15 @@
     </tr>
   </table>
 
-  <style>
-    table tr > td {
+  <style scoped>
+    :scope table tr > td {
       cursor: pointer;
     }
-    .current {
+    :scope .current {
       font-weight: bold;
       text-decoration: underline;
     }
-    .duration{
+    :scope .duration{
       text-decoration: underline;
     }
   </style>
@@ -26,13 +26,10 @@
 
     tag.on('mount', function(){
 
-      var timeHandle = this.root.querySelectorAll('input[name="time"]')[0];
-
       opts.vlc && opts.vlc.on('playlist', function (items) {
         try{
           tag.items = items;
           tag.update()
-          // console.log(s)
         }catch(ex){
           console.log(ex)
         }
@@ -40,7 +37,9 @@
     })
 
     play(e) {
-      opts.vlc && opts.vlc.trigger('ctrl-play', e.item.id);
+      opts.vlc && opts.vlc.play(e.item.id, function () {
+        console.log(arguments)
+      })
     }
 
   </script>

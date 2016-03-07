@@ -1,91 +1,77 @@
 var riot = require('riot')
 
+require('./tags/configuration.tag');
 require('./tags/remote-control.tag');
 require('./tags/drop.tag');
 require('./tags/playlist.tag');
+require('./tags/transfer.tag');
 
-var backend     = new (require('./vlc-remote.js'))({port: 8083, password: '123'});
-var normalizer  = require('./drop-normalizer.js');
+
+var SvcController  = require('./services-controller.js');
+var VlcController  = require('./vlc-controller.js');
+var FSRemote       = require('./libs/fs-remote.js');
+var TorrentRemote  = require('./libs/torrent-remote.js');
 
 document.addEventListener('DOMContentLoaded', function () {
-  var dropper   = riot.observable()
-  var uploader  = riot.observable()
-  var vlc       = riot.observable()
 
-  dropper.on('dropped', function (dataTransfer) {
-    normalizer.normalize(dataTransfer).forEach(function (f) {
-      if (f.type==='file') {
+  var svc     = new SvcController({port: 8090});
+  var vlc     = new VlcController();
+  var fs      = new FSRemote();
 
-      } else if (f.type.match(/uri-list/)) {
-        backend.enqueue(f.data, function () {
-          console.log(arguments)
-        })
-      }
+  var confTag     = riot.mount('configuration', {})[0];
+  var vlcTag      = riot.mount('remote-control', {vlc: vlc, status:{}, meta:{}, maxVolume: 512 /* vlc specifics ?*/})[0]
+  var playlistTag = riot.mount('playlist', {vlc: vlc, items: []})[0]
+  var transferTag = riot.mount('transfer', {items: []})[0]
+  var dropTag     = riot.mount('drop', {})[0]
+
+  var transferer  = riot.observable()
+
+  var discoverService = function () {
+    svc.discoverHosts({timeout: 500}, function (err, hosts){
+      !err && confTag.trigger('hosts-found', hosts)
+    })
+  };
+  discoverService();
+
+  confTag.on('refresh', discoverService)
+
+  confTag.on('remote-selected', svc.selectHost.bind(svc))
+  confTag.on('remote-unselected', svc.unselectHost.bind(svc))
+
+  svc.on('vlc-found', function (service) {
+    vlc.setEndPoint(service);
+    vlc.start();
+
+    var urlDropped = function (f) {
+      vlc.enqueue(f.data, function () {
+        console.log(arguments)
+      })
+    }
+
+    dropTag.on('url-dropped', urlDropped)
+
+    svc.one('vlc-leave', function (service) {
+      dropTag.off('url-dropped', urlDropped);
+      vlc.stop();
+      vlc.setEndPoint({});
     })
   })
 
-  backend.start();
-  backend.status(function (err, res) {
-    !err && vlc.trigger('status', backend.getStatus())
-  })
-  backend.playlist(function (err, res) {
-    !err && vlc.trigger('playlist', backend.getPlaylist())
-  })
-  backend.on('playlist', function (err) {
-    vlc.trigger('playlist', backend.getPlaylist())
-  })
-  backend.on('status', function (err) {
-    vlc.trigger('status', backend.getStatus())
-  })
+  svc.on('fs-found', function (service) {
+    fs.setEndPoint(service);
 
-  vlc.on('ctrl-play', function (plItemId) {
-    if (plItemId) {
-      backend.play(plItemId, function () {
-        console.log(arguments)
-      })
-    } else if (backend.hasActiveMedia()) {
-      if (backend.isPaused()) backend.resume(function () {
-        console.log(arguments)
-      })
-      else if (backend.isPlaying()) backend.pause(function () {
-        console.log(arguments)
-      })
-      else backend.play(backend.getCurrentItem(), function () {
-        console.log(arguments)
-      })
+    var fileDropped = function (f) {
+      // var transfer = remoteFS.write('/', f.data);
+      // transferer.emit('enqueue', transfer)
     }
-    else if(backend.getPlaylist().length)
-      backend.play(backend.getPlaylist()[0].id, function () {
-        console.log(arguments)
-      })
-    else {
-      // trigger alert
-    }
-  })
-  vlc.on('ctrl-pause', function () {
-    backend.pause(function (err, res) {
-      console.log(err);
-      console.log(res)
-    })
-  })
-  vlc.on('ctrl-volume-rel', function (volume) {
-    if (volume) {
-      backend.volumeRel(volume)
-    }
-  })
-  vlc.on('ctrl-volume-abs', function (volume) {
-    if (volume) {
-      backend.volumeAbs(volume)
-    }
-  })
-  vlc.on('ctrl-stop', function () {
-    backend.stop(function (err, res) {
-      console.log(err);
-      console.log(res)
+
+    dropTag.on('file-dropped', fileDropped)
+
+    svc.one('fs-leave', function (service) {
+      dropTag.off('file-dropped', fileDropped);
     })
   })
 
-  riot.mount('remote-control', {vlc: vlc, status:{}, meta:{}, maxVolume: 512 /* vlc specifics ?*/})
-  riot.mount('drop', {dropper: dropper})
-  riot.mount('playlist', {vlc: vlc, items: []})
+
+
 })

@@ -1,0 +1,16 @@
+{
+  "base_url": "",
+  "dl_path": "./demo/store",
+  "clear": {
+    "port": 8092,
+    "host": "localhost"
+  },
+  "webtorrent": {
+    "immediate": true
+  },
+  "cors": {
+    "origin": "*",
+    "credentials": "true",
+    "methods": ["GET", "POST"]
+  }
+}
